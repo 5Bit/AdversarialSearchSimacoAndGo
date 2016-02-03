@@ -16,6 +16,12 @@ public class Node {
 	/**
 	 * Root node constructor
 	 */
+	Node(Board brd)
+	{
+		parentNode = null;
+		this.board = brd;
+	}
+	
 	Node(Board brd, int playerNum, int ply)
 	{
 		parentNode = null;
@@ -30,8 +36,8 @@ public class Node {
 		myPly = n.getPly() + 1;
 		parentNode = n;
 		this.board = brd;
-		if(n.playerNumber == 1) playerNumber = 2;
-		else playerNumber = 1;
+		if(n.playerNumber == 1) this.playerNumber = 2;
+		else this.playerNumber = 1;
 		score = calculateScore();
 		
 	}

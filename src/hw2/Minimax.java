@@ -188,41 +188,71 @@ public class Minimax implements Player{
 		Node root = new Node(currentBoard, 1, 1);
 		
 		Node nextMove = move(root, ply);
-		return nextMove.getBoard();
+		return nextMove.getBoard(); // getting the board ahead - fix!
 	}
 	
 	
 	private Node move(Node currentState, int ply)
 	{
+		int chosenPos = 0;
 		if(prints)
 		System.out.println("On ply" + currentState.getPly());
 		if(currentState.getPly() == depth) return currentState;
 		if(currentState.getBoard().isFull()) return currentState;
 		ArrayList<Board> newSuccessors = calculateSuccessors(currentState.getBoard());
-		Node bestChoice = new Node(newSuccessors.get(0), currentState);
+		Node bestChoice = new Node(newSuccessors.get(chosenPos), currentState);
 		// then it is the Player's turn to make a move
 		if(currentState.getPlayerNum() == 2)
 		{
-			
-			bestChoice = new Node(newSuccessors.get(0), currentState);
-			for(Board b: newSuccessors)
+			bestChoice = new Node(newSuccessors.get(chosenPos), currentState);
+			for(int i = 0; i < newSuccessors.size(); i++)
 			{
-				Node thisMove = move(new Node(b, currentState), ply-1);
-				if(thisMove.getScore() < bestChoice.getScore()) bestChoice = thisMove; // TODO - discern what is wrong with minimax
+				// if the next move is worst for the opponent, kill it with fire and go back up.
+				
+				Node thisMove = move(new Node(newSuccessors.get(i), currentState), ply-1);
+				if(thisMove.getScore() < bestChoice.getScore()) 
+					{
+					bestChoice = thisMove;
+					chosenPos = i;
+					}
 			}
-			
-			return bestChoice;
+//			
+//			for(Board b: newSuccessors)
+//			{
+//				Node thisMove = move(new Node(b, currentState), ply-1);// change to pos!
+//				if(thisMove.getScore() < bestChoice.getScore()) bestChoice = thisMove; // TODO - discern what is wrong with minimax
+//			}
+//			return bestChoice;
+			return new Node(newSuccessors.get(chosenPos));
 		}
-		else// AI's turn is next
+		else
 		{
-			bestChoice = new Node(newSuccessors.get(0), this.playerNumber, (currentState.getPly() +1));
-			for(Board b: newSuccessors)
+			bestChoice = new Node(newSuccessors.get(0), currentState);
+			for(int i = 0; i < newSuccessors.size(); i++)
 			{
-				Node thisMove = move(new Node(b, currentState), ply-1);
-				if(thisMove.getScore() > bestChoice.getScore()) bestChoice = thisMove;
+				
+				Node thisMove = move(new Node(newSuccessors.get(i), currentState), ply-1);
+				if(thisMove.getScore() > bestChoice.getScore())
+				{
+					bestChoice = thisMove;
+					chosenPos = i; // need to keep track of both the chosen pos and the end, passing the chosen
+				}
 			}
-			return bestChoice;
+//			return bestChoice;
+			return new Node(newSuccessors.get(chosenPos));
 		}
+		
+
+//		else// AI's turn is next
+//		{
+//			bestChoice = new Node(newSuccessors.get(0), currentState);
+//			for(Board b: newSuccessors)
+//			{
+//				Node thisMove = move(new Node(b, currentState), ply-1);
+//				if(thisMove.getScore() > bestChoice.getScore()) bestChoice = thisMove;
+//			}
+//			return bestChoice;
+//		}
 	}
 	
 	

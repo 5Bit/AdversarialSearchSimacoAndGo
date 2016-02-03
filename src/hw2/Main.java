@@ -24,7 +24,7 @@ public class Main {
 			
 			Simacogo thisGame = new Simacogo();
 			thisGame.setInput(in);
-			thisGame.setAIFight(1, 3);
+			thisGame.setAIFight(1, 5);
 			//thisGame.p1.togglePrints();
 			//thisGame.p2.togglePrints();
 			thisGame.run();
