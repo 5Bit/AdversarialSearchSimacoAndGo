@@ -9,6 +9,8 @@ public class Minimax implements Player{
 	int originalPly;
 	int oppNum;
 	boolean prints = true;
+	int abPruneAlpha;
+	int abPruneBeta;
 	
 	public Minimax(int playerNum, int difficulty)
 	{
@@ -18,6 +20,10 @@ public class Minimax implements Player{
 		
 		if(playerNumber == 1) oppNum = 2;
 		else oppNum = 1;
+		abPruneAlpha = Integer.MIN_VALUE;
+		abPruneBeta = Integer.MAX_VALUE;
+		
+		
 	}
 	
 	public void togglePrints()
@@ -45,7 +51,7 @@ public class Minimax implements Player{
 		// get move
 //		move = makeMove(currentBoard, depth);
 		move = makeMoveWithNodes(currentBoard, depth);
-		System.out.println(currentBoard);
+		//System.out.println(currentBoard);
 		//return move
 		return move;
 	}

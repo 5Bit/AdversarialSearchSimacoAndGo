@@ -95,7 +95,7 @@ public class Simacogo {
 		do{
 		
 			
-		System.out.println("Round " + round);
+//		System.out.println("Round " + round);
 		
 		gameBoard = p1.takeTurn(gameBoard);
 		gameBoard = p2.takeTurn(gameBoard);
@@ -104,8 +104,8 @@ public class Simacogo {
 		p1Score =  p1.calculateScore(gameBoard);
 		p2Score =  p2.calculateScore(gameBoard);
 		
-		System.out.println("Player1's score is " + p1Score);
-		System.out.println("Player2's score is " + p2Score);
+//		System.out.println("Player1's score is " + p1Score);
+//		System.out.println("Player2's score is " + p2Score);
 		
 		
 //		System.out.println("Would someone like to ragequit? 1: Yes");
@@ -120,6 +120,8 @@ public class Simacogo {
 		}
 		while(!gameBoard.isFull());
 		
+		System.out.println("Player1's score is " + p1Score);
+		System.out.println("Player2's score is " + p2Score);
 		if(p1Score > p2Score)
 			winner = new String("Player 1");
 		else if(p1Score < p2Score)

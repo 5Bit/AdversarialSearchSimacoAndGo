@@ -22,12 +22,30 @@ public class Main {
 		{
 			System.out.println("Test selected. Running test versions now.");
 			
+			System.out.println("1 vs 5" );
 			Simacogo thisGame = new Simacogo();
 			thisGame.setInput(in);
 			thisGame.setAIFight(1, 5);
-			//thisGame.p1.togglePrints();
-			//thisGame.p2.togglePrints();
+			thisGame.p1.togglePrints();
+			thisGame.p2.togglePrints();
 			thisGame.run();
+			thisGame = new Simacogo();
+			thisGame.setInput(in);
+			thisGame.setAIFight(2, 7);
+			thisGame.p1.togglePrints();
+			thisGame.p2.togglePrints();
+			System.out.println("2 vs 7");
+			thisGame.run();
+			thisGame = new Simacogo();
+			thisGame.setInput(in);
+			thisGame.setAIFight(1, 10);
+			thisGame.p1.togglePrints();
+			thisGame.p2.togglePrints();
+			System.out.println("1 vs 10");
+			thisGame.run();
+			
+			
+			
 		}
 
 		while(inLine.equalsIgnoreCase("Y"))
