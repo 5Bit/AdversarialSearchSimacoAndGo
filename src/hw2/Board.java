@@ -178,6 +178,22 @@ public class Board {
 			{
 				if(this.getPosition(x, y) == plyr)
 				{
+					
+					// calculate diagonal ones.
+					// calculate them by checking the immediate bottom left and bottom right array positions, and incrementing by one.
+					if(x<8 && y<8)
+						if(this.getPosition(x+1, y+1) == plyr)
+						{
+							score++;
+						}
+					
+					if(y<8 && x >0)
+						if(this.getPosition(x-1, y+1) == plyr)
+						{
+							score++;
+						}
+					// end of calculating the diagonal ones
+					
 						// check right as long as it isn't the edge!
 					if(x<8)
 						if(this.getPosition(x+1, y) == plyr)
@@ -198,29 +214,8 @@ public class Board {
 			}
 		
 		
-		// calculate diagonal ones.
-		// calculate them by checking the immediate bottom left and bottom right array positions, and incrementing by one.
+
 		
-		for(int x = 0; x< 9; x++)
-			for(int y = 0; y < 9; y++)
-			{
-				if(this.getPosition(x, y) == plyr)
-				{
-					if(x<8 && y<8)
-						if(this.getPosition(x+1, y+1) == plyr)
-						{
-							score++;
-						}
-						
-						//check bottom as long as it isn't the edge!
-					if(y<8 && x >0)
-						if(this.getPosition(x-1, y+1) == plyr)
-						{
-							score++;
-						}
-				}
-				
-			}
 		return score;
 	}
 	

@@ -12,6 +12,11 @@ public class Minimax implements Player{
 	int abPruneAlpha;
 	int abPruneBeta;
 	
+	/**
+	 * Minimax Constructor.
+	 * @param playerNum
+	 * @param difficulty
+	 */
 	public Minimax(int playerNum, int difficulty)
 	{
 		playerNumber = playerNum;
@@ -26,6 +31,9 @@ public class Minimax implements Player{
 		
 	}
 	
+	/**
+	 * Toggles minimax's prints. Useful for running debugging.
+	 */
 	public void togglePrints()
 	{
 		if(prints) 
@@ -37,7 +45,9 @@ public class Minimax implements Player{
 	}
 	
 
-
+	/**
+	 * Prompts minimax to take it's turn
+	 */
 	public Board takeTurn(Board currentBoard) {
 
 		if(prints)
@@ -49,10 +59,7 @@ public class Minimax implements Player{
 		}
 		Board move = null;
 		// get move
-//		move = makeMove(currentBoard, depth);
 		move = makeMoveWithNodes(currentBoard, depth);
-		//System.out.println(currentBoard);
-		//return move
 		return move;
 	}
 
@@ -77,47 +84,29 @@ public class Minimax implements Player{
 				if(currentBoard.getPosition(x, y) == oppNum)
 				{
 						// check right as long as it isn't the edge!
+					if(x<8 && y<8)
+						if(currentBoard.getPosition(x+1, y+1) == oppNum)
+						{
+							score++;
+						}
 					if(x<8)
 						if(currentBoard.getPosition(x+1, y) == oppNum)
 						{
-							
-							// add to map
-							// count it up.
 							score+= 2;
 						}
-						
 						//check bottom as long as it isn't the edge!
 					if(y<8)
 						if(currentBoard.getPosition(x, y+1) == oppNum)
 						{
 							score += 2;
 						}
-				}
-			}
-		
-		
-		// calculate diagonal ones.
-		// calculate them by checking the immediate bottom left and bottom right array positions, and incrementing by one.
-		
-		for(int x = 0; x< 9; x++)
-			for(int y = 0; y < 9; y++)
-			{
-				if(currentBoard.getPosition(x, y) == oppNum)
-				{
-					if(x<8 && y<8)
-						if(currentBoard.getPosition(x+1, y+1) == oppNum)
-						{
-							score++;
-						}
-						
 						//check bottom as long as it isn't the edge!
 					if(y<8 && x >0)
 						if(currentBoard.getPosition(x-1, y+1) == oppNum)
 						{
-							score++;
+						score++;
 						}
 				}
-				
 			}
 		return score;
 	}
@@ -152,24 +141,11 @@ public class Minimax implements Player{
 						{
 							score += 2;
 						}
-				}
-			}
-		
-		
-		// calculate diagonal ones.
-		// calculate them by checking the immediate bottom left and bottom right array positions, and incrementing by one.
-		
-		for(int x = 0; x< 9; x++)
-			for(int y = 0; y < 9; y++)
-			{
-				if(currentBoard.getPosition(x, y) == this.playerNumber)
-				{
 					if(x<8 && y<8)
 						if(currentBoard.getPosition(x+1, y+1) == this.playerNumber)
 						{
 							score++;
 						}
-						
 						//check bottom as long as it isn't the edge!
 					if(y<8 && x >0)
 						if(currentBoard.getPosition(x-1, y+1) == this.playerNumber)
@@ -177,7 +153,6 @@ public class Minimax implements Player{
 							score++;
 						}
 				}
-				
 			}
 		return score;
 	}
@@ -193,12 +168,19 @@ public class Minimax implements Player{
 	{
 		Node root = new Node(currentBoard, 1, 1);
 		
-		Node nextMove = move(root, ply);
+		Node nextMove = move(root, ply, abPruneAlpha, abPruneBeta);
 		return nextMove.getBoard(); // getting the board ahead - fix!
 	}
 	
-	
-	private Node move(Node currentState, int ply)
+	/**
+	 * Helper used by makeMoveWithNodes. does all of the heavy lifting.
+	 * @param currentState
+	 * @param ply
+	 * @param alpha
+	 * @param beta
+	 * @return
+	 */
+	private Node move(Node currentState, int ply, int alpha, int beta)
 	{
 		int chosenPos = 0;
 		if(prints)
@@ -210,101 +192,50 @@ public class Minimax implements Player{
 		// then it is the Player's turn to make a move
 		if(currentState.getPlayerNum() == 2)
 		{
+			
 			bestChoice = new Node(newSuccessors.get(chosenPos), currentState);
+			// loop through the successors
 			for(int i = 0; i < newSuccessors.size(); i++)
 			{
-				// if the next move is worst for the opponent, kill it with fire and go back up.
-				
-				Node thisMove = move(new Node(newSuccessors.get(i), currentState), ply-1);
-				if(thisMove.getScore() < bestChoice.getScore()) 
-					{
-					bestChoice = thisMove;
-					chosenPos = i;
-					}
+				//get the move
+					Node thisMove = move(new Node(newSuccessors.get(i), currentState), ply-1, alpha, beta);
+					
+					//if the move is worse than the previous for the opponent...
+					if(thisMove.getScore() < bestChoice.getScore()) 
+						{
+						bestChoice = thisMove; // this is ideal
+						chosenPos = i;
+						}
+					// alpha beta pruning - sets beta and prunes this path if it proves bad.
+					if(thisMove.getScore() < beta) beta = thisMove.getScore();
+					if(alpha >= beta) break; 
 			}
-//			
-//			for(Board b: newSuccessors)
-//			{
-//				Node thisMove = move(new Node(b, currentState), ply-1);// change to pos!
-//				if(thisMove.getScore() < bestChoice.getScore()) bestChoice = thisMove; // TODO - discern what is wrong with minimax
-//			}
-//			return bestChoice;
+
 			return new Node(newSuccessors.get(chosenPos));
 		}
-		else
+		else //AIs turn
 		{
 			bestChoice = new Node(newSuccessors.get(0), currentState);
+			int thisMinNodeValB = bestChoice.getScore();
+			// loops through the choices
 			for(int i = 0; i < newSuccessors.size(); i++)
 			{
-				
-				Node thisMove = move(new Node(newSuccessors.get(i), currentState), ply-1);
-				if(thisMove.getScore() > bestChoice.getScore())
+				// get the move
+				Node thisMove = move(new Node(newSuccessors.get(i), currentState), ply-1, alpha, beta);
+				// if the move is better than the previous for Minimax
+				if(thisMove.getScore() >= bestChoice.getScore())
 				{
 					bestChoice = thisMove;
 					chosenPos = i; // need to keep track of both the chosen pos and the end, passing the chosen
 				}
+				// alpha beta pruning. sets alpha here when this score is better.
+				if(thisMove.getScore() > beta) alpha = thisMove.getScore();
+				if(alpha >= beta) break;
+				
 			}
-//			return bestChoice;
 			return new Node(newSuccessors.get(chosenPos));
 		}
-		
-
-//		else// AI's turn is next
-//		{
-//			bestChoice = new Node(newSuccessors.get(0), currentState);
-//			for(Board b: newSuccessors)
-//			{
-//				Node thisMove = move(new Node(b, currentState), ply-1);
-//				if(thisMove.getScore() > bestChoice.getScore()) bestChoice = thisMove;
-//			}
-//			return bestChoice;
-//		}
 	}
-	
-	
-	
-	
-	/**
-	 * should recursively look through using basic minimax to make a move!
-	 * @param currentBoard
-	 * @param ply
-	 * @return
-	 */
-	public Board makeMove(Board currentBoard, int ply)
-	{
-		//TODO - minimax only accounts for own decision at the moment. doesn't take a shot at looking at the opponents choices.
-		if(prints)
-		System.out.println("On ply" + ply);
-		if(ply == 0) return currentBoard;
-		if(currentBoard.isFull()) return currentBoard;
-		ArrayList<Board> newSuccessors = calculateSuccessors(currentBoard);
-		Board move = newSuccessors.get(0);
-		Board bestMove = newSuccessors.get(0);// get the first, because it needs something to avoid a null issue
-		
-		if(originalPly % ply != 0) // miniMax
-		{ // should alter so it only returns 1 move. Remove moves?
-			// TODO should be predicting player's moves in here - is not. is making two moves and applying them!
-						for(Board b : newSuccessors)
-						{
-							move = makeMove(b, ply-1);
-							if(move.calculateScore(playerNumber) < bestMove.calculateScore(playerNumber)) bestMove = move;
-						}
-						return bestMove;
-		}
-		else
-		{
-			for(Board b : newSuccessors)
-			{
-				move = makeMove(b, ply-1);
-				if(move.calculateScore(playerNumber) > bestMove.calculateScore(playerNumber)) bestMove = move;
-			}
-			return bestMove;
-		}
-	}
-	
-
-	
-	
 
 	/**
 	 * Creates successors for Minimax on cmd
@@ -319,11 +250,9 @@ public class Minimax implements Player{
 		for(int i = 0; i < 9; i++)
 		{
 			// if i position isn't full
-			//System.out.println("Column " + i + "is full: " + board.checkColumnIfFull(i));
 			if(!board.checkColumnIfFull(i))
 			{
 				Board tempBoard = new Board(board);
-				
 				tempBoard.makeMove(playerNumber, i);
 				successors.add(tempBoard);
 			}

@@ -33,13 +33,14 @@ public class HumanPlayer implements Player {
 		System.out.println(currentBoard.toString());
 		System.out.print("Player " + playerNumber +", choose a column to place a piece.\n");
 		System.out.println("Choose a number. the board is above. The following is the number to enter for each according row.");
-		System.out.println("[0, 1, 2, 3, 4, 5, 6, 7, 8]");
+		System.out.println("[1, 2, 3, 4, 5, 6, 7, 8, 9]");
 		}
 		int x = -1;
-		while(x < 0 || x > 8)
+		while(x < 1 || x > 9)
 		{
 			x = input.nextInt();
-			if(!currentBoard.checkColumnIfFull(x)) currentBoard.makeMove(playerNumber, x);
+			
+			if(!currentBoard.checkColumnIfFull(x-1)) currentBoard.makeMove(playerNumber, x-1);
 			else x = -1;
 		}
 		if(prints)

@@ -23,7 +23,10 @@ public class Simacogo {
 	}
 	
 	
-	
+	/**
+	 * sets the players. mode 1 is pvp. mode 2 is Player vs Minimax. Mode 3 is minimax vs minimax. Anything else does nothing.
+	 * @param mode
+	 */
 	void setPlayers(int mode)
 	{
 		if (mode == 1) {
@@ -81,22 +84,33 @@ public class Simacogo {
 		
 	}
 	
+	/**
+	 * Helps set up an AI fight easier than setPlayers for the purposes of automated testing.
+	 * @param diff1
+	 * @param diff2
+	 */
 	void setAIFight(int diff1, int diff2)
 	{
 		p1 = new Minimax(1, diff1);
 		p2 = new Minimax(2, diff2);
 	}
 	
+	
+	/**
+	 * Runs Simacogo. Be warned - need to have set up the players and the input before running.
+	 */
 	void run()
 	{
 		int p1Score = 0, p2Score = 0;
 		int round = 0;
 		String winner;
+		// loops through game until board is full
 		do{
 		
 			
-//		System.out.println("Round " + round);
+		System.out.println("Round " + round);
 		
+		// call's players turns.
 		gameBoard = p1.takeTurn(gameBoard);
 		gameBoard = p2.takeTurn(gameBoard);
 
@@ -104,22 +118,14 @@ public class Simacogo {
 		p1Score =  p1.calculateScore(gameBoard);
 		p2Score =  p2.calculateScore(gameBoard);
 		
-//		System.out.println("Player1's score is " + p1Score);
-//		System.out.println("Player2's score is " + p2Score);
-		
-		
-//		System.out.println("Would someone like to ragequit? 1: Yes");
-//		int x = 0;
-//		x = input.nextInt();
-//		
-//		if(x != 1) break;
-//		else System.out.println("Assuming desire to continue.");
-		
+		System.out.println("Player1's score is " + p1Score);
+		System.out.println("Player2's score is " + p2Score);	
 		
 		round++;
 		}
 		while(!gameBoard.isFull());
 		
+		// print out game results.
 		System.out.println("Player1's score is " + p1Score);
 		System.out.println("Player2's score is " + p2Score);
 		if(p1Score > p2Score)

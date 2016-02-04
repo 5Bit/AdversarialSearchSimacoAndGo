@@ -9,7 +9,7 @@ public class Node {
 	public Node parentNode = null;
 	private int score; // cost to get here
 	private int playerNumber;
-	
+	private int beta;
 	private int myPly;
 	
 	
@@ -29,6 +29,7 @@ public class Node {
 		playerNumber = playerNum;
 		myPly = ply;
 		score = 0;
+		beta = Integer.MAX_VALUE;
 	}
 	
 	Node(Board brd, Node n)
@@ -39,7 +40,7 @@ public class Node {
 		if(n.playerNumber == 1) this.playerNumber = 2;
 		else this.playerNumber = 1;
 		score = calculateScore();
-		
+		beta = n.beta;
 	}
 	
 	private int calculateScore()
