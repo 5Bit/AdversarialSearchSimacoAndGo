@@ -216,7 +216,6 @@ public class Minimax implements Player{
 		else //AIs turn
 		{
 			bestChoice = new Node(newSuccessors.get(0), currentState);
-			int thisMinNodeValB = bestChoice.getScore();
 			// loops through the choices
 			for(int i = 0; i < newSuccessors.size(); i++)
 			{
